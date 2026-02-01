@@ -1,0 +1,179 @@
+BASIC:
+    base_price: 10.00
+    free_storage_gb: 10
+    overage_storage_per_gb: 1.00
+    free_bandwidth_gb: 100
+    overage_bandwidth_per_gb: 0.50
+    free_api_calls: 1000
+    overage_api_per_call: 0.01
+
+PRO:
+    base_price: 15.00
+    free_storage_gb: 20
+    overage_storage_per_gb: 0.90
+    free_bandwidth_gb: 200
+    overage_bandwidth_per_gb: 0.45
+    free_api_calls: 2000
+    overage_api_per_call: 0.009
+
+ENTERPRISE:
+    base_price: 100.00
+    free_storage_gb: 500
+    overage_storage_per_gb: 0.50
+    free_bandwidth_gb: 5000
+    overage_bandwidth_per_gb: 0.20
+    free_api_calls: 50000
+    overage_api_per_call: 0.002
+
+PREMIUM:
+    base_price: 20.00
+    free_storage_gb: 100
+    overage_storage_per_gb: 0.80
+    free_bandwidth_gb: 500
+    overage_bandwidth_per_gb: 0.40
+    free_api_calls: 5000
+    overage_api_per_call: 0.005
+
+GOLD:
+    base_price: 50.00
+    free_storage_gb: 200
+    overage_storage_per_gb: 0.70
+    free_bandwidth_gb: 1000
+    overage_bandwidth_per_gb: 0.35
+    free_api_calls: 10000
+    overage_api_per_call: 0.004
+
+SILVER:
+    base_price: 30.00
+    free_storage_gb: 50
+    overage_storage_per_gb: 0.85
+    free_bandwidth_gb: 300
+    overage_bandwidth_per_gb: 0.42
+    free_api_calls: 3000
+    overage_api_per_call: 0.007
+
+PLATINUM:
+    base_price: 75.00
+    free_storage_gb: 300
+    overage_storage_per_gb: 0.60
+    free_bandwidth_gb: 2000
+    overage_bandwidth_per_gb: 0.30
+    free_api_calls: 20000
+    overage_api_per_call: 0.003
+
+ULTIMATE:
+    base_price: 150.00
+    free_storage_gb: 1000
+    overage_storage_per_gb: 0.40
+    free_bandwidth_gb: 10000
+    overage_bandwidth_per_gb: 0.15
+    free_api_calls: 100000
+    overage_api_per_call: 0.001
+
+STANDARD:
+    base_price: 8.00
+    free_storage_gb: 5
+    overage_storage_per_gb: 1.20
+    free_bandwidth_gb: 50
+    overage_bandwidth_per_gb: 0.60
+    free_api_calls: 500
+    overage_api_per_call: 0.015
+
+ADVANCED:
+    base_price: 25.00
+    free_storage_gb: 150
+    overage_storage_per_gb: 0.75
+    free_bandwidth_gb: 750
+    overage_bandwidth_per_gb: 0.38
+    free_api_calls: 7500
+    overage_api_per_call: 0.006
+
+ELITE:
+    base_price: 60.00
+    free_storage_gb: 250
+    overage_storage_per_gb: 0.65
+    free_bandwidth_gb: 1500
+    overage_bandwidth_per_gb: 0.32
+    free_api_calls: 15000
+    overage_api_per_call: 0.0035
+
+BUSINESS:
+    base_price: 40.00
+    free_storage_gb: 100
+    overage_storage_per_gb: 0.80
+    free_bandwidth_gb: 800
+    overage_bandwidth_per_gb: 0.40
+    free_api_calls: 8000
+    overage_api_per_call: 0.005
+
+PERSONAL:
+    base_price: 5.00
+    free_storage_gb: 5
+    overage_storage_per_gb: 1.50
+    free_bandwidth_gb: 50
+    overage_bandwidth_per_gb: 0.75
+    free_api_calls: 500
+    overage_api_per_call: 0.02
+
+FAMILY:
+    base_price: 12.00
+    free_storage_gb: 30
+    overage_storage_per_gb: 0.95
+    free_bandwidth_gb: 150
+    overage_bandwidth_per_gb: 0.48
+    free_api_calls: 1500
+    overage_api_per_call: 0.01
+
+STUDENT:
+    base_price: 3.00
+    free_storage_gb: 10
+    overage_storage_per_gb: 1.00
+    free_bandwidth_gb: 100
+    overage_bandwidth_per_gb: 0.50
+    free_api_calls: 1000
+    overage_api_per_call: 0.01
+
+TRIAL:
+    base_price: 0.00
+    free_storage_gb: 5
+    overage_storage_per_gb: 2.00
+    free_bandwidth_gb: 50
+    overage_bandwidth_per_gb: 1.00
+    free_api_calls: 500
+    overage_api_per_call: 0.03
+
+FREE:
+    base_price: 0.00
+    free_storage_gb: 2
+    overage_storage_per_gb: 3.00
+    free_bandwidth_gb: 20
+    overage_bandwidth_per_gb: 1.50
+    free_api_calls: 200
+    overage_api_per_call: 0.05
+
+PLUS:
+    base_price: 18.00
+    free_storage_gb: 50
+    overage_storage_per_gb: 0.85
+    free_bandwidth_gb: 250
+    overage_bandwidth_per_gb: 0.43
+    free_api_calls: 2500
+    overage_api_per_call: 0.008
+
+MAX:
+    base_price: 200.00
+    free_storage_gb: 2000
+    overage_storage_per_gb: 0.30
+    free_bandwidth_gb: 20000
+    overage_bandwidth_per_gb: 0.10
+    free_api_calls: 200000
+    overage_api_per_call: 0.0005
+
+VIP:
+    base_price: 80.00
+    free_storage_gb: 400
+    overage_storage_per_gb: 0.55
+    free_bandwidth_gb: 3000
+    overage_bandwidth_per_gb: 0.25
+    free_api_calls: 30000
+    overage_api_per_call: 0.0025
