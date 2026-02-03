@@ -1,0 +1,102 @@
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.1)
+
+2026-02-03T15:30:15.219+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.s.I.InvoiceGenerationApplication       : Starting InvoiceGenerationApplication using Java 21.0.9 with PID 9504 (C:\Users\abuth\Downloads\Java_data_projects\InvoiceGeneration\target\classes started by abuth in C:\Users\abuth\Downloads\Java_data_projects\InvoiceGeneration)
+2026-02-03T15:30:15.222+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.s.I.InvoiceGenerationApplication       : No active profile set, falling back to 1 default profile: "default"
+2026-02-03T15:30:15.907+05:30  INFO 9504 --- [InvoiceGeneration] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-03T15:30:16.023+05:30  INFO 9504 --- [InvoiceGeneration] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 99 ms. Found 2 JPA repository interfaces.
+2026-02-03T15:30:16.479+05:30  INFO 9504 --- [InvoiceGeneration] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-02-03T15:30:16.574+05:30  INFO 9504 --- [InvoiceGeneration] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.0.Final
+2026-02-03T15:30:17.104+05:30  INFO 9504 --- [InvoiceGeneration] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-03T15:30:17.147+05:30  INFO 9504 --- [InvoiceGeneration] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-03T15:30:17.196+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:30:17.197+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.g.cloud.sql.core.CoreSocketFactory     : First Cloud SQL connection, generating RSA key pair.
+2026-02-03T15:30:21.210+05:30  INFO 9504 --- [InvoiceGeneration] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3b4bd341
+2026-02-03T15:30:21.212+05:30  INFO 9504 --- [InvoiceGeneration] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-03T15:30:21.328+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:30:22.782+05:30  INFO 9504 --- [InvoiceGeneration] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://google/invoice-generation?socketFactory=com.google.cloud.sql.postgres.SocketFactory&cloudSqlInstance=gcp-learning-acnt:us-central1:invoice-generation-job]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: invoice-generation/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-03T15:30:23.121+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:30:23.561+05:30  INFO 9504 --- [InvoiceGeneration] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-03T15:30:23.564+05:30  INFO 9504 --- [InvoiceGeneration] [           main] org.hibernate.orm.jdbc.batch             : HHH100501: Automatic JDBC statement batching enabled (maximum batch size 500)
+2026-02-03T15:30:24.857+05:30  INFO 9504 --- [InvoiceGeneration] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-03T15:30:24.916+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:30:24.971+05:30  INFO 9504 --- [InvoiceGeneration] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-03T15:30:25.149+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.s.I.config.InvoiceGeneratorConfig      : Reading customer information data from the database...
+2026-02-03T15:30:25.234+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.g.c.s.core.DefaultCredentialsProvider  : Default credentials provider for service account invoice-generation-job-acl@gcp-learning-acnt.iam.gserviceaccount.com
+2026-02-03T15:30:25.234+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.g.c.s.core.DefaultCredentialsProvider  : Scopes in use by default credentials: [https://www.googleapis.com/auth/pubsub, https://www.googleapis.com/auth/spanner.admin, https://www.googleapis.com/auth/spanner.data, https://www.googleapis.com/auth/datastore, https://www.googleapis.com/auth/sqlservice.admin, https://www.googleapis.com/auth/devstorage.read_only, https://www.googleapis.com/auth/devstorage.read_write, https://www.googleapis.com/auth/cloudruntimeconfig, https://www.googleapis.com/auth/trace.append, https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/cloud-vision, https://www.googleapis.com/auth/bigquery, https://www.googleapis.com/auth/monitoring.write]
+2026-02-03T15:30:25.255+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.g.c.s.a.c.GcpContextAutoConfiguration  : The default project ID is gcp-learning-acnt
+2026-02-03T15:30:25.514+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.s.I.InvoiceGenerationApplication       : Started InvoiceGenerationApplication in 10.772 seconds (process running for 11.488)
+2026-02-03T15:30:25.525+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.s.I.InvoiceGenerationApplication       : File : gs://spring-batch/usage_details.csv
+2026-02-03T15:30:25.525+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.s.I.InvoiceGenerationApplication       : service_acct_key : C:\Users\abuth\Downloads\Java_data_projects\cloud-run-invoice-job-service-acct-json-key.json
+2026-02-03T15:30:25.529+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.s.I.InvoiceGenerationApplication       : Starting the Batch Job with the file : gs://spring-batch/usage_details.csv
+2026-02-03T15:30:25.604+05:30  INFO 9504 --- [InvoiceGeneration] [           main] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=invoiceProcessingJob]] launched with the following parameters: [{JobParameter{name='usage', value=gs://spring-batch/usage_details.csv, type=class java.lang.String, identifying=true},JobParameter{name='service_acct_key', value=C:\Users\abuth\Downloads\Java_data_projects\cloud-run-invoice-job-service-acct-json-key.json, type=class java.lang.String, identifying=true},JobParameter{name='runTime', value=1770112825528, type=class java.lang.Long, identifying=true}}]
+2026-02-03T15:30:25.610+05:30  INFO 9504 --- [InvoiceGeneration] [           main] o.s.batch.core.job.SimpleStepHandler     : Executing step: [loadUsageStep]
+2026-02-03T15:30:26.679+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:30:28.485+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:30:30.263+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:30:32.059+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:30:33.842+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:30:35.619+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:32:29.199+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.s.I.config.InvoiceGeneratorConfig      : Loaded usage info details successfully !!
+2026-02-03T15:32:29.216+05:30  INFO 9504 --- [InvoiceGeneration] [           main] o.s.batch.core.step.AbstractStep         : Step: [loadUsageStep] executed in 2m3s596ms
+2026-02-03T15:32:29.219+05:30  INFO 9504 --- [InvoiceGeneration] [           main] o.s.batch.core.job.SimpleStepHandler     : Executing step: [loadPricingStep]
+2026-02-03T15:32:29.356+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.s.I.config.InvoiceGeneratorConfig      : Pricing Plans Loaded successfully !!
+2026-02-03T15:32:29.357+05:30  INFO 9504 --- [InvoiceGeneration] [           main] o.s.batch.core.step.AbstractStep         : Step: [loadPricingStep] executed in 136ms
+2026-02-03T15:32:29.358+05:30  INFO 9504 --- [InvoiceGeneration] [           main] o.s.batch.core.job.SimpleStepHandler     : Executing step: [invoiceProcess]
+2026-02-03T15:53:59.027+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:55:26.237+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:55:47.180+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:56:14.979+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:56:16.742+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:56:40.666+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:57:49.967+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:59:24.846+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T15:59:47.923+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T16:18:52.152+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T16:20:25.296+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T16:21:46.968+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T16:22:19.996+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T16:23:06.027+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T16:23:36.837+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T16:25:43.020+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T16:25:49.289+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T16:26:11.480+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T16:44:41.399+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T16:46:52.343+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T16:48:38.377+05:30  INFO 9504 --- [InvoiceGeneration] [onnection-adder] c.g.cloud.sql.core.CoreSocketFactory     : Connecting to Cloud SQL instance [gcp-learning-acnt:us-central1:invoice-generation-job] via SSL socket.
+2026-02-03T16:48:44.978+05:30  INFO 9504 --- [InvoiceGeneration] [           main] o.s.batch.core.step.AbstractStep         : Step: [invoiceProcess] executed in 1h16m15s618ms
+2026-02-03T16:48:44.997+05:30  INFO 9504 --- [InvoiceGeneration] [           main] c.s.I.config.JobCompletionListener       : All jobs completed successfully. Shutting down the application !!
+2026-02-03T16:48:45.094+05:30  INFO 9504 --- [InvoiceGeneration] [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-03T16:48:45.115+05:30  INFO 9504 --- [InvoiceGeneration] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-02-03T16:48:47.448+05:30  INFO 9504 --- [InvoiceGeneration] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-02-03T16:48:47.472+05:30  INFO 9504 --- [InvoiceGeneration] [           main] o.s.b.c.l.s.TaskExecutorJobLauncher      : Job: [SimpleJob: [name=invoiceProcessingJob]] completed with the following parameters: [{JobParameter{name='usage', value=gs://spring-batch/usage_details.csv, type=class java.lang.String, identifying=true},JobParameter{name='service_acct_key', value=C:\Users\abuth\Downloads\Java_data_projects\cloud-run-invoice-job-service-acct-json-key.json, type=class java.lang.String, identifying=true},JobParameter{name='runTime', value=1770112825528, type=class java.lang.Long, identifying=true}}] and the following status: [COMPLETED] in 1h18m19s383ms
+======== Job Execution Summary ========
+Status: COMPLETED
+Exit Description :
+Read count : 6000.0
+Write Count : 6000.0
+Skip Count : 0.0
+All Step details :
+  Step 'loadUsageStep': COMPLETED, Read: 0, Write: 0, Skip: 0
+  Step 'loadPricingStep': COMPLETED, Read: 0, Write: 0, Skip: 0
+  Step 'invoiceProcess': COMPLETED, Read: 6000, Write: 6000, Skip: 0
+Job completed successfully! Check PostgresSQL tables for data.
+
+Process finished with exit code 0

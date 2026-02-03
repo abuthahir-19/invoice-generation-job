@@ -1,10 +1,14 @@
 package com.subscription.InvoiceGeneration.config;
 
+import com.google.cloud.spring.storage.GoogleStorageResource;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import com.subscription.InvoiceGeneration.model.Customer;
 import com.subscription.InvoiceGeneration.model.Invoice;
 import com.subscription.InvoiceGeneration.model.Usage;
 import com.subscription.InvoiceGeneration.repo.CustomerRepository;
 import com.subscription.InvoiceGeneration.repo.InvoiceRepository;
+import com.subscription.InvoiceGeneration.util.GCSUtil;
 import jakarta.persistence.EntityManagerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,11 +60,27 @@ public class InvoiceGeneratorConfig {
 
     @Bean
     @StepScope
-    public Tasklet loadUsageTasklet (@Value ("#{jobParameters['usage']}") String usage) {
+    public Tasklet loadUsageTasklet (
+            @Value ("#{jobParameters['usage']}") String usage,
+            @Value ("#{jobParameters['service_acct_key']}") String service_acct_key
+    ) {
         return (contribution, chunkContext) -> {
+
+            // Dev
+            Storage storage = StorageOptions
+                    .newBuilder()
+                    .setCredentials (GCSUtil.getCredentials(service_acct_key))
+                    .build()
+                    .getService();
+
+            // Prod
+//            Storage storage = StorageOptions
+//                    .getDefaultInstance()
+//                    .getService();
+
             FlatFileItemReader<Usage> reader = new FlatFileItemReaderBuilder<Usage>()
                     .name ("usageReader")
-                    .resource (new ClassPathResource(usage))
+                    .resource (new GoogleStorageResource (storage, usage))
                     .delimited()
                     .names ("customer_id", "storage_used_gb", "bandwidth_used_gb", "api_calls", "peak_usage_date", "total_logins")
                     .fieldSetMapper (new BeanWrapperFieldSetMapper<>(){{
@@ -93,7 +113,7 @@ public class InvoiceGeneratorConfig {
     @Bean
     public Step loadUsageStep () {
         return new StepBuilder ("loadUsageStep", jobRepository)
-                .tasklet (loadUsageTasklet(null))
+                .tasklet (loadUsageTasklet(null, null))
                 .build();
     }
 
@@ -115,10 +135,6 @@ public class InvoiceGeneratorConfig {
             Yaml yaml = new Yaml();
             try (InputStream in = new ClassPathResource("pricing_details.yaml").getInputStream()) {
                 Map<String, Map<String, Object>> pricingMap = yaml.load (in);
-
-//                if (pricingMap != null && !pricingMap.containsKey ("plans")) {
-//                    throw new IllegalArgumentException ("Invalid Pricing Yaml Structure");
-//                }
 
                 chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put ("pricingMap", pricingMap);
             }

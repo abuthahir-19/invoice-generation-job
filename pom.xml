@@ -32,18 +32,18 @@
 		<maven.compiler.release>21</maven.compiler.release>
 		<spring-cloud-gcp.version>4.1.0</spring-cloud-gcp.version>
 	</properties>
-<!--	<dependencyManagement>-->
-<!--		<dependencies>-->
-<!--			&lt;!&ndash; Spring Cloud GCP BOM: Manages versions for all GCP starters &ndash;&gt;-->
-<!--			<dependency>-->
-<!--				<groupId>com.google.cloud</groupId>-->
-<!--				<artifactId>spring-cloud-gcp-dependencies</artifactId>-->
-<!--				<version>${spring-cloud-gcp.version}</version>-->
-<!--				<type>pom</type>-->
-<!--				<scope>import</scope>-->
-<!--			</dependency>-->
-<!--		</dependencies>-->
-<!--	</dependencyManagement>-->
+	<dependencyManagement>
+		<dependencies>
+			<!-- Spring Cloud GCP BOM: Manages versions for all GCP starters -->
+			<dependency>
+				<groupId>com.google.cloud</groupId>
+				<artifactId>spring-cloud-gcp-dependencies</artifactId>
+				<version>${spring-cloud-gcp.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -78,15 +78,15 @@
 			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>com.google.cloud</groupId>-->
-<!--			<artifactId>spring-cloud-gcp-starter-storage</artifactId>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>com.google.cloud.sql</groupId>-->
-<!--			<artifactId>postgres-socket-factory</artifactId>-->
-<!--			<version>1.13.0</version>  &lt;!&ndash; Latest as of 2023 &ndash;&gt;-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>spring-cloud-gcp-starter-storage</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.cloud.sql</groupId>
+			<artifactId>postgres-socket-factory</artifactId>
+			<version>1.13.0</version>  <!-- Latest as of 2023 -->
+		</dependency>
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
