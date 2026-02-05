@@ -35,11 +35,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
 
 @Configuration
 @EnableBatchProcessing
@@ -62,25 +69,32 @@ public class InvoiceGeneratorConfig {
     @StepScope
     public Tasklet loadUsageTasklet (
             @Value ("#{jobParameters['usage']}") String usage,
-            @Value ("#{jobParameters['service_acct_key']}") String service_acct_key
+            @Value ("#{jobParameters['service_acct_key']}") String service_acct_key,
+            @Value ("#{jobParameters['env']}") String env
     ) {
         return (contribution, chunkContext) -> {
+            Storage storage;
+            Resource resource;
 
-            // Dev
-            Storage storage = StorageOptions
-                    .newBuilder()
-                    .setCredentials (GCSUtil.getCredentials(service_acct_key))
-                    .build()
-                    .getService();
-
-            // Prod
-//            Storage storage = StorageOptions
-//                    .getDefaultInstance()
-//                    .getService();
+            if ("prod".equals (env)) {
+                storage = StorageOptions
+                        .getDefaultInstance()
+                        .getService();
+                resource = new GoogleStorageResource (storage, usage);
+            } else if ("dev".equals (env)) {
+                storage = StorageOptions
+                        .newBuilder()
+                        .setCredentials(GCSUtil.getCredentials (service_acct_key))
+                        .build()
+                        .getService();
+                resource = new GoogleStorageResource (storage, usage);
+            } else {
+                resource = new FileSystemResource (usage);
+            }
 
             FlatFileItemReader<Usage> reader = new FlatFileItemReaderBuilder<Usage>()
                     .name ("usageReader")
-                    .resource (new GoogleStorageResource (storage, usage))
+                    .resource (resource)
                     .delimited()
                     .names ("customer_id", "storage_used_gb", "bandwidth_used_gb", "api_calls", "peak_usage_date", "total_logins")
                     .fieldSetMapper (new BeanWrapperFieldSetMapper<>(){{
@@ -91,14 +105,59 @@ public class InvoiceGeneratorConfig {
 
             reader.open (chunkContext.getStepContext().getStepExecution().getExecutionContext());
 
-            Map<Integer, Usage> usageMap = new HashMap<>();
-            Usage usage1 = reader.read();
-            while (usage1 != null) {
-                usageMap.put (usage1.getCustomerId(), usage1);
-                usage1 = reader.read();
+            List<String> lines = new ArrayList<>();
+            String line;
+            BufferedReader bf = new BufferedReader (new InputStreamReader(resource.getInputStream()));
+            bf.readLine();
+            while ((line = bf.readLine()) != null) {
+                lines.add (line);
+            }
+            bf.close();
+            reader.close();
+
+            int numThreads = Runtime.getRuntime().availableProcessors();
+            ExecutorService executors = Executors.newFixedThreadPool (numThreads);
+            ConcurrentMap<Integer, Usage> usageMap = new ConcurrentHashMap<>();
+
+            int batchSize = lines.size() / numThreads;
+            List<Future<Void>> futures = new ArrayList<>();
+            for (int i = 0; i < numThreads; i++) {
+                int start = i * batchSize;
+                int end = (i == numThreads - 1) ? lines.size() : start + batchSize;
+
+                List<String> batch = lines.subList (start, end);
+                futures.add (executors.submit (() -> {
+                    for (String l : batch) {
+                        try {
+                            String[] fields = l.split (",");
+                            if (fields.length != 6) {
+                                LOG.warn ("Skipping invalid line : {}", l);
+                                return null;
+                            };
+
+                            Usage u = new Usage();
+                            u.setCustomerId (Integer.parseInt (fields[0]));
+                            u.setStorageUsedGB (new BigDecimal (fields[1]));
+                            u.setBandwidthUsedGB (new BigDecimal (fields[2]));
+                            u.setApiCalls (Integer.parseInt (fields[3]));
+                            u.setPeakUsageDate (fields[4]);
+                            u.setTotalLogins (Integer.parseInt (fields[5]));
+
+                            usageMap.put (u.getCustomerId(), u);
+                        } catch (Exception e) {
+                            LOG.error ("Error parsing line {} : {}", l, e.getMessage());
+                        }
+                    }
+                    return null;
+                }));
             }
 
-            reader.close();
+            for (Future<Void> f : futures) {
+                f.get();
+            }
+
+            executors.shutdown();
+
             chunkContext.getStepContext()
                     .getStepExecution()
                     .getJobExecution()
@@ -113,7 +172,7 @@ public class InvoiceGeneratorConfig {
     @Bean
     public Step loadUsageStep () {
         return new StepBuilder ("loadUsageStep", jobRepository)
-                .tasklet (loadUsageTasklet(null, null))
+                .tasklet (loadUsageTasklet(null, null, null))
                 .build();
     }
 
@@ -125,7 +184,7 @@ public class InvoiceGeneratorConfig {
                 .name ("customerReader")
                 .entityManagerFactory (entityManagerFactory)
                 .queryString ("SELECT c FROM Customer c WHERE c.status = 'ACTIVE'")
-                .pageSize (100)
+                .pageSize (2000)
                 .build();
     }
 
@@ -170,7 +229,7 @@ public class InvoiceGeneratorConfig {
             RepositoryItemWriter<Invoice> invoiceItemWriter
     ) {
         return new StepBuilder ("invoiceProcess", jobRepository)
-                .<Customer, Invoice>chunk(100)
+                .<Customer, Invoice>chunk(2000)
                 .reader (customerReader)
                 .processor (invoiceItemProcessor)
                 .writer (invoiceItemWriter)
