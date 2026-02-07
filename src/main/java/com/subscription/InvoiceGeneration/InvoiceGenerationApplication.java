@@ -24,6 +24,7 @@ public class InvoiceGenerationApplication implements CommandLineRunner {
 	private static final Logger LOG = LogManager.getLogger();
 	private static String filePath;
 	private static String service_acct_key;
+	private static String env;
 
 	@Autowired
 	private JobOperator jobOperator;
@@ -39,13 +40,15 @@ public class InvoiceGenerationApplication implements CommandLineRunner {
 	public void run (String... args) throws Exception {
 		Instant startTime = Instant.now();
 
-		if (args.length != 2) {
-			LOG.error ("Illegal Argument : Expected 2 but found {}, Args: <file_path><space><service_acct_key>", args.length);
+		if (args.length != 3) {
+			LOG.error ("Illegal Argument : Expected 3 but found {}, Args: <file_path><space><service_acct_key><space><env>", args.length);
 		}
 		filePath = args[0];
 		service_acct_key = args[1];
+		env  = args[2];
 		LOG.info ("File : {}", filePath);
 		LOG.info ("service_acct_key : {}", service_acct_key);
+		LOG.info ("Environment : " + env);
 
 		loadInvoiceGenerationJob();
 
@@ -63,7 +66,7 @@ public class InvoiceGenerationApplication implements CommandLineRunner {
 		JobParameters params = new JobParametersBuilder()
 				.addString ("usage", filePath)
 				.addString ("service_acct_key", service_acct_key)
-				.addString ("env", "dev")
+				.addString ("env", env)
 				.addLong ("runTime", System.currentTimeMillis())
 				.toJobParameters();
 
