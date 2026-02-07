@@ -61,8 +61,7 @@ public class InvoiceProcessor implements ItemProcessor<Customer, Invoice>, StepE
 
         Usage usage = usageMap.get (customer.getId());
         if (usage == null) {
-            LOG.error ("Skipping for the customer {}: Since usage are null", customer.getId());
-
+//            LOG.error ("Skipping for the customer {}: Since usage are null", customer.getId());
             return null;
         }
 
@@ -74,7 +73,7 @@ public class InvoiceProcessor implements ItemProcessor<Customer, Invoice>, StepE
 
         LocalDate effectiveStart = customer.getStartDate().isBefore (billingStart) ? billingStart : customer.getStartDate();
         if (effectiveStart.isAfter (billingEnd)) {
-            LOG.error ("Skipping customer {}: Subscription started after the billing end", customer.getId());
+//            LOG.error ("Skipping customer {}: Subscription started after the billing end", customer.getId());
             return null;
         }
         long daysActive = ChronoUnit.DAYS.between (effectiveStart, billingEnd) + 1;

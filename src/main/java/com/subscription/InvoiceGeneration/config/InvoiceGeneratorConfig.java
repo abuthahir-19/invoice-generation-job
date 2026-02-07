@@ -16,10 +16,13 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.partition.Partitioner;
+import org.springframework.batch.core.partition.support.TaskExecutorPartitionHandler;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.infrastructure.item.ExecutionContext;
 import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.batch.infrastructure.item.data.RepositoryItemWriter;
 import org.springframework.batch.infrastructure.item.database.JpaPagingItemReader;
@@ -36,6 +39,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedReader;
@@ -177,14 +182,64 @@ public class InvoiceGeneratorConfig {
     }
 
     @Bean
-    public JpaPagingItemReader<Customer> customerReader () {
+    public Partitioner customerPartitioner () {
+        return gridSize -> {
+            Map<String, ExecutionContext> partitions = new HashMap<>();
+            long minId = 1;
+            long maxId = 10000000;
+            long rangeSize = (maxId - minId) / gridSize;
+            for (int i = 0; i < gridSize; i++) {
+                ExecutionContext context = new ExecutionContext();
+                long partitionMin = minId + (i * rangeSize);
+                long partitionMax = (i == gridSize - 1) ? maxId : partitionMin + rangeSize - 1;
+                context.putLong ("minId", partitionMin);
+                context.putLong ("maxId", partitionMax);
+                partitions.put ("partition" + i, context);
+            }
+
+            return partitions;
+        };
+    }
+
+    @Bean
+    public TaskExecutor batchTaskExecutor () {
+        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor("batch-");
+        executor.setConcurrencyLimit (Runtime.getRuntime().availableProcessors());
+        return executor;
+    }
+
+    @Bean
+    @StepScope
+    public JpaPagingItemReader<Customer> customerReader (
+            @Value ("#{stepExecutionContext['minId']}") Long minId,
+            @Value ("#{stepExecutionContext['maxId']}") Long maxId
+    ) {
         LOG.info ("Reading customer information data from the database...");
+        LOG.info ("Reading partition : minId = {}, maxId = {}", minId, maxId);
 
         return new JpaPagingItemReaderBuilder<Customer>()
                 .name ("customerReader")
                 .entityManagerFactory (entityManagerFactory)
-                .queryString ("SELECT c FROM Customer c WHERE c.status = 'ACTIVE'")
-                .pageSize (2000)
+                .queryString ("SELECT c FROM Customer c WHERE c.status = 'ACTIVE' AND c.id BETWEEN :minId AND :maxId ORDER BY c.id")
+                .parameterValues (Map.of ("minId", minId, "maxId", maxId))
+                .pageSize (1000)
+                .build();
+    }
+
+    @Bean
+    public Step partitionedInvoiceStep (
+            Partitioner customerPartitioner,
+            TaskExecutor batchTaskExecutor,
+            @Qualifier ("invoiceProcess") Step invoiceProcess
+    ) {
+        TaskExecutorPartitionHandler handler = new TaskExecutorPartitionHandler();
+        handler.setGridSize(Runtime.getRuntime().availableProcessors());  // Partitions = cores
+        handler.setTaskExecutor(batchTaskExecutor);
+        handler.setStep(invoiceProcess);
+
+        return new StepBuilder ("partitionedInvoiceStep", jobRepository)
+                .partitioner ("invoiceProcess", customerPartitioner)
+                .partitionHandler (handler)
                 .build();
     }
 
@@ -229,7 +284,7 @@ public class InvoiceGeneratorConfig {
             RepositoryItemWriter<Invoice> invoiceItemWriter
     ) {
         return new StepBuilder ("invoiceProcess", jobRepository)
-                .<Customer, Invoice>chunk(2000)
+                .<Customer, Invoice>chunk(10000)
                 .reader (customerReader)
                 .processor (invoiceItemProcessor)
                 .writer (invoiceItemWriter)
@@ -243,14 +298,14 @@ public class InvoiceGeneratorConfig {
     public Job invoiceProcessingJob (
             @Qualifier ("loadUsageStep") Step loadUsageStep,
             @Qualifier ("loadPricingStep") Step loadPricingStep,
-            @Qualifier ("invoiceProcess") Step invoiceProcess,
+            @Qualifier ("partitionedInvoiceStep") Step partitionedInvoiceStep,
             JobCompletionListener listener
     ) {
         return new JobBuilder ("invoiceProcessingJob", jobRepository)
                 .listener (listener)
                 .start (loadUsageStep)
                 .next (loadPricingStep)
-                .next (invoiceProcess)
+                .next (partitionedInvoiceStep)
                 .build();
     }
 }

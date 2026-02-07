@@ -15,6 +15,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.time.Duration;
+import java.time.Instant;
+
 @SpringBootApplication
 @EnableScheduling
 public class InvoiceGenerationApplication implements CommandLineRunner {
@@ -34,6 +37,8 @@ public class InvoiceGenerationApplication implements CommandLineRunner {
 
 	@Override
 	public void run (String... args) throws Exception {
+		Instant startTime = Instant.now();
+
 		if (args.length != 2) {
 			LOG.error ("Illegal Argument : Expected 2 but found {}, Args: <file_path><space><service_acct_key>", args.length);
 		}
@@ -43,6 +48,14 @@ public class InvoiceGenerationApplication implements CommandLineRunner {
 		LOG.info ("service_acct_key : {}", service_acct_key);
 
 		loadInvoiceGenerationJob();
+
+		Instant endTime = Instant.now();
+		Duration duration = Duration.between (startTime, endTime);
+
+		long minutes = duration.toMinutes();
+		long seconds = duration.toSeconds() % 60;
+
+		System.out.println ("Total Execution Time : " + minutes + " mins " + seconds + " seconds.");
 	}
 
 	@Scheduled (cron = "0 10 0 * * ?")
@@ -50,6 +63,7 @@ public class InvoiceGenerationApplication implements CommandLineRunner {
 		JobParameters params = new JobParametersBuilder()
 				.addString ("usage", filePath)
 				.addString ("service_acct_key", service_acct_key)
+				.addString ("env", "dev")
 				.addLong ("runTime", System.currentTimeMillis())
 				.toJobParameters();
 
