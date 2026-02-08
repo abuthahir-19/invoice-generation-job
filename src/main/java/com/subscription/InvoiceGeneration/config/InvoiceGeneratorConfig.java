@@ -6,7 +6,6 @@ import com.google.cloud.storage.StorageOptions;
 import com.subscription.InvoiceGeneration.model.Customer;
 import com.subscription.InvoiceGeneration.model.Invoice;
 import com.subscription.InvoiceGeneration.model.Usage;
-import com.subscription.InvoiceGeneration.repo.CustomerRepository;
 import com.subscription.InvoiceGeneration.repo.InvoiceRepository;
 import com.subscription.InvoiceGeneration.util.GCSUtil;
 import jakarta.persistence.EntityManagerFactory;
@@ -60,9 +59,6 @@ public class InvoiceGeneratorConfig {
 
     @Autowired
     private JobRepository jobRepository;
-
-    @Autowired
-    private CustomerRepository customerRepository;
 
     @Autowired
     private InvoiceRepository invoiceRepository;
@@ -138,7 +134,7 @@ public class InvoiceGeneratorConfig {
                             if (fields.length != 6) {
                                 LOG.warn ("Skipping invalid line : {}", l);
                                 return null;
-                            };
+                            }
 
                             Usage u = new Usage();
                             u.setCustomerId (Integer.parseInt (fields[0]));

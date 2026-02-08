@@ -82,11 +82,11 @@
 			<groupId>com.google.cloud</groupId>
 			<artifactId>spring-cloud-gcp-starter-storage</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.google.cloud.sql</groupId>
-			<artifactId>postgres-socket-factory</artifactId>
-			<version>1.13.0</version>  <!-- Latest as of 2023 -->
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.google.cloud.sql</groupId>-->
+<!--			<artifactId>postgres-socket-factory</artifactId>-->
+<!--			<version>1.13.0</version>  &lt;!&ndash; Latest as of 2023 &ndash;&gt;-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
