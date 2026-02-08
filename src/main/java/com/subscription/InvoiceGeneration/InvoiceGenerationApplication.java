@@ -48,7 +48,8 @@ public class InvoiceGenerationApplication implements CommandLineRunner {
 		env  = args[2];
 		LOG.info ("File : {}", filePath);
 		LOG.info ("service_acct_key : {}", service_acct_key);
-		LOG.info ("Environment : " + env);
+		LOG.info ("Environment : {}", env);
+		LOG.info ("JVM Memory : {} MB", Runtime.getRuntime().maxMemory() / 1024 / 1024);
 
 		loadInvoiceGenerationJob();
 
