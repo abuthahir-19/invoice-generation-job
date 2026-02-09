@@ -72,3 +72,118 @@ For cloud deployment:
 1. Built as JAR, containerized with Docker.
 2. Pushed to Artifact Registry.
 3. Deployed as Cloud Run Job, invocable manually or scheduled.
+
+## Setup and Installation
+### Prerequisites
+
+- Java 21
+- Maven 3.8+
+- Docker
+- GCP Account
+- Google Cloud SDK installed in local environment
+- PostgreSQL (Required to be installed in local machine for testing locally).
+
+## Local Setup
+
+1. Clone the repository:
+```shell
+git clone https://github.com/abuthahir-19/sales-data-batch-processor.git
+cd sales-data-batch-processor
+```
+2. Configure application.properties (or use environment variables):
+```properties
+spring.application.name=EcommerceSalesImport
+spring.datasource.url=jdbc:postgresql://localhost:5432/<database-name>?socketFactory=com.google.cloud.sql.postgres.SocketFactory&cloudSqlInstance=<your-connection-name>&user=postgres&password=<your-password>&useSSL=false
+spring.datasource.username=postgres
+spring.datasource.password=<pass>
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# Testing Evn (for Local Development)
+#spring.datasource.url=jdbc:postgresql://localhost:5432/ecommercesales
+#spring.datasource.password=123456789
+#spring.datasource.driver-class-name=org.postgresql.Driver
+
+# Cloud SQL specifics
+spring.cloud.gcp.sql.database-name=ecommerce-sales
+spring.cloud.gcp.sql.instance-connection-name=<your-connection-name>
+
+spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.show-sql=true
+
+# Batch: Use PostgreSQL for JobRepository (auto-creates BATCH_* tables)
+spring.batch.jdbc.initialize-schema=always
+spring.batch.job.enabled=false  # Disables auto-run on startup (we control via runner)
+
+# JPA Batching for performance (even in test)
+spring.jpa.properties.hibernate.jdbc.batch_size=500
+spring.jpa.properties.hibernate.order_inserts=true
+```
+3. Build the project
+```shell
+mvn clean install
+```
+4. Run the application
+```shell
+java -jar target/sales-data-batch-processor.jar /path/to/sales-data.csv path/to/service-account-key.json
+```
+
+## Docker Containerization
+
+1. Build the Docker image:
+```shell
+docker build -t sales-data-batch-processor:latest .
+```
+
+2. Run docker image locally and verify:
+```shell
+docker run \
+  -v <your-service-account-cred-file>:/app/creds.json \
+  -e GOOGLE_APPLICATION_CREDENTIALS=/app/creds.json \
+  ecommerce-batch-job --gs://<bucket_name>/sales_data.csv --/app/creds.json
+```
+
+3. Create an Artifact Registry in Google Artifact Registry:
+```shell
+    gcloud artifacts repositories create my-batch-repo \
+  --repository-format=docker \
+  --location=<region> \
+  --project=<gcp_project>
+```
+
+4. Authenticate Docker to push:
+```shell
+gcloud auth configure-docker <region>-docker.pkg.dev
+```
+
+5. Tag your local image for GCP:
+```shell
+docker tag sales-data-batch-processor:latest <region>.pkg.dev/<gcp_project>/my-batch-repo/sales-data-batch-processor:latest
+```
+
+6. Push the image:
+```shell
+docker push <region>-docker.pkg.dev/<gcp_project>/my-batch-repo/sales-data-batch-processor:latest
+```
+
+- Verify in GCP Console: Artifact Registry > Repositories > my-batch-repo > Images.
+
+## GCP Deployment
+
+1. Set up Google Cloud SQL PostgreSQL instance.
+
+2. Create a Cloud Run Job
+```shell
+gcloud run jobs create sales-data-batch-processor \
+  --image <region>-docker.pkg.dev/<gcp_project>/my-batch-repo/sales-data-batch-processor:latest \
+  --region <region> \
+  --project <your_gcp_project> \
+  --service-account <your-service-account@gcp-project-name.iam.gserviceaccount.com> \
+  --max-retries 3 \
+  --tasks 1  # Single task; adjust if parallel processing needed
+```
+
+3. Run the Job:
+```shell
+gcloud run jobs execute sales-data-batch-processor \
+  --region <region>
+```
