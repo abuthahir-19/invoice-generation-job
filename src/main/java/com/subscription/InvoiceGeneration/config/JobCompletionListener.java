@@ -7,6 +7,7 @@ import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.job.JobExecution;
 import org.springframework.batch.core.listener.JobExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class JobCompletionListener implements JobExecutionListener {
     private static final Logger LOG = LogManager.getLogger();
+
+    @Value ("${spring.profiles.active:default}")
+    private String activeProfile;
 
     @Autowired
     private ApplicationContext context;

@@ -102,13 +102,14 @@ public class InvoiceProcessor implements ItemProcessor<Customer, Invoice>, StepE
 
         BigDecimal subTotal = proratedPrice.add (storageOverage).add (bandwidthOverage).add (apiOverage);
         BigDecimal discount = subTotal.multiply (new BigDecimal (customer.getDiscount()).divide (BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
-        BigDecimal total = subTotal.subtract (discount);
+        BigDecimal total = subTotal.subtract (discount).setScale(2, RoundingMode.HALF_UP);
 
         Invoice invoice = new Invoice();
         invoice.setCustomerId (customer.getId());
         invoice.setMonth (usage.getPeakUsageDate().substring (0, 7));
         invoice.setPlan ("Subscription : "  + customer.getPlanCode() + " (" + planDetails.get (BASE_PRICE) + "/month,"+ planDetails.get (FREE_STORAGE_GB) + " free GB)");
         invoice.setBaseCharge (new BigDecimal (planDetails.get (BASE_PRICE).toString()));
+        invoice.setProratedPrice (proratedPrice);
         invoice.setOverageCharge (subTotal);
         invoice.setTotal (total);
         invoice.setGeneratedAt (LocalDateTime.now());

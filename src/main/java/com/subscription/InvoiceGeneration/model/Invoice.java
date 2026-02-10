@@ -15,6 +15,7 @@ public class Invoice {
     private String plan;
     private String month;
     private BigDecimal baseCharge;
+    private BigDecimal proratedPrice;
     private BigDecimal overageCharge;
     private BigDecimal total;
     private LocalDateTime generatedAt;
@@ -59,6 +60,14 @@ public class Invoice {
 
     public void setBaseCharge(BigDecimal baseCharge) {
         this.baseCharge = baseCharge;
+    }
+
+    public BigDecimal getProratedPrice() {
+        return proratedPrice;
+    }
+
+    public void setProratedPrice(BigDecimal proratedPrice) {
+        this.proratedPrice = proratedPrice;
     }
 
     public BigDecimal getOverageCharge() {
