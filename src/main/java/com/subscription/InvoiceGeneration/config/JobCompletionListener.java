@@ -10,20 +10,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
 
 @Component
 public class JobCompletionListener implements JobExecutionListener {
     private static final Logger LOG = LogManager.getLogger();
 
-    @Value ("${spring.profiles.active:default}")
-    private String activeProfile;
+    @Autowired
+    private Environment environment;
 
     @Autowired
     private ApplicationContext context;
 
     @Override
     public void afterJob (@NonNull JobExecution jobExecution) {
+        String[] activeProfiles = environment.getActiveProfiles();
+        boolean isTestProfile = Arrays.asList (activeProfiles).contains ("test");
+
+        LOG.info ("Active profiles : {}", Arrays.asList (activeProfiles));
+
+        if (isTestProfile) {
+            LOG.info ("Test profile detected. Skipping application shutdown");
+            return;
+        }
+
         if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
             LOG.info ("All jobs completed successfully. Shutting down the application !!");
             SpringApplication.exit (context, () -> 0);

@@ -13,6 +13,7 @@ public class Invoice {
     private int id;
     private int customerId;
     private String plan;
+    @Column (name = "billing_month")
     private String month;
     private BigDecimal baseCharge;
     private BigDecimal proratedPrice;
