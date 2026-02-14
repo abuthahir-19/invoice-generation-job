@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -26,10 +27,10 @@ public class InvoiceGenerationApplication implements CommandLineRunner {
 	private static String service_acct_key;
 	private static String env;
 
-	@Autowired
+	@Autowired (required = false)
 	private JobOperator jobOperator;
 
-	@Autowired
+	@Autowired (required = false)
 	private Job invoiceProcessingJob;
 
 	public static void main(String[] args) {

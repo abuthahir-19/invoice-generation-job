@@ -1,7 +1,11 @@
 package com.subscription.InvoiceGeneration.integration.job;
 
+import com.subscription.InvoiceGeneration.model.Customer;
 import com.subscription.InvoiceGeneration.model.Invoice;
+import com.subscription.InvoiceGeneration.repo.CustomerRepository;
 import com.subscription.InvoiceGeneration.repo.InvoiceRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +15,6 @@ import org.springframework.batch.core.job.parameters.JobParametersBuilder;
 import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.BatchStatus;
-import org.springframework.batch.test.JobOperatorTestUtils;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,9 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.properties")
 class InvoiceJobIntegrationTest {
-
-    @Autowired
-    private JobOperatorTestUtils jobOperatorTestUtils;
+    private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
     private JobOperator jobOperator;
@@ -53,15 +54,16 @@ class InvoiceJobIntegrationTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Sql (scripts = "classpath:test-data.sql")
     @BeforeEach
     void setUp() {
         // Clear invoice table before each test
         invoiceRepository.deleteAll();
-
-        jdbcTemplate.execute ("DELETE FROM customers");
     }
 
-    @Sql (scripts = "classpath:test-data.sql")
     @Test
     @DisplayName("Should successfully complete invoice generation job")
     void testJobCompletion() throws Exception {
@@ -75,8 +77,8 @@ class InvoiceJobIntegrationTest {
         assertEquals(BatchStatus.COMPLETED, jobExecution.getStatus());
 
         // Verify customers were inserted
-        Integer customerCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM customers", Integer.class);
-        System.out.println("Total customers in DB: " + customerCount);
+        List<Customer> customers = customerRepository.findAll();
+        System.out.println("Total customers in DB: " + customers.size());
 
         // Verify step executions
         jobExecution.getStepExecutions().forEach(step ->
@@ -84,21 +86,26 @@ class InvoiceJobIntegrationTest {
         );
     }
 
+    @Sql (scripts = "classpath:test-data.sql")
     @Test
     @DisplayName("Should generate invoices for active customers only")
     void testActiveCustomersProcessing() throws Exception {
         // Given: Job parameters
         JobParameters jobParameters = createTestJobParameters();
 
+        List<Customer> customers = customerRepository.findAll();
+        LOG.info ("List of customer: {} and their count : {}", customers, customers.size());
+
         // When: Execute the job
-        JobExecution jobExecution = jobOperator.start(invoiceProcessingJob, jobParameters);
+        jobOperator.start(invoiceProcessingJob, jobParameters);
 
         // Then: Should create invoices only for active customers (customers 1, 2, 3)
         // Customer 4 is INACTIVE and should be skipped
-        List<Invoice> invoices = (List<Invoice>) invoiceRepository.findAll();
+        List<Invoice> invoices = invoiceRepository.findAll();
+        LOG.info ("List of invoices : {} and their count : {}", invoices, invoices.size());
 
-        assertTrue(invoices.size() > 0, "Should generate at least one invoice");
-        assertTrue(invoices.size() <= 3, "Should not generate invoice for inactive customer");
+        assertFalse(invoices.isEmpty(), "Should generate at least one invoice");
+        assertEquals (8, invoices.size());
 
         // Verify no invoice for customer 4 (INACTIVE)
         boolean hasInactiveCustomerInvoice = invoices.stream()
@@ -124,7 +131,7 @@ class InvoiceJobIntegrationTest {
         assertEquals(BatchStatus.COMPLETED, jobExecution.getStatus());
 
         // Verify no invoice for customer 999
-        List<Invoice> invoices = (List<Invoice>) invoiceRepository.findAll();
+        List<Invoice> invoices = invoiceRepository.findAll();
         boolean hasInvoiceFor999 = invoices.stream()
                 .anyMatch(inv -> inv.getCustomerId() == 999);
         assertFalse(hasInvoiceFor999, "Should skip customer without usage data");
@@ -193,12 +200,12 @@ class InvoiceJobIntegrationTest {
         jobOperator.start(invoiceProcessingJob, jobParameters);
 
         // Then: Invoices should be saved in database
-        List<Invoice> savedInvoices = (List<Invoice>) invoiceRepository.findAll();
+        List<Invoice> savedInvoices = invoiceRepository.findAll();
 
         assertFalse(savedInvoices.isEmpty(), "Should save invoices to database");
 
         // Verify invoice structure
-        Invoice firstInvoice = savedInvoices.get(0);
+        Invoice firstInvoice = savedInvoices.getFirst();
         assertNotNull(firstInvoice.getCustomerId());
         assertNotNull(firstInvoice.getMonth());
         assertNotNull(firstInvoice.getPlan());
@@ -247,7 +254,7 @@ class InvoiceJobIntegrationTest {
                 .mapToLong(org.springframework.batch.core.step.StepExecution::getWriteCount)
                 .sum();
 
-        List<Invoice> savedInvoices = (List<Invoice>) invoiceRepository.findAll();
+        List<Invoice> savedInvoices = invoiceRepository.findAll();
         assertEquals(savedInvoices.size(), totalWriteCount, "Write count should match saved invoices");
     }
 
@@ -255,7 +262,7 @@ class InvoiceJobIntegrationTest {
     private JobParameters createTestJobParameters() {
         return new JobParametersBuilder()
                 .addString("usage", "D:\\Java_data_projects\\InvoiceGeneration\\src\\test\\resources\\test-usage-comprehensive.csv")
-                .addString("service_acct_key", "")
+                .addString("service_acct_key", "D:\\Java_data_projects\\cloud-run-invoice-job-service-acct-json-key.json")
                 .addString("env", "local")
                 .addLong("runTime", System.currentTimeMillis())
                 .toJobParameters();

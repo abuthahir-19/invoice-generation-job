@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 public class Invoice {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private int id;
-    private int customerId;
+    private Integer id;
+    private Integer customerId;
     private String plan;
     @Column (name = "billing_month")
     private String month;
@@ -23,19 +23,19 @@ public class Invoice {
 
     public Invoice () { }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getCustomerId() {
+    public Integer getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(int customerId) {
+    public void setCustomerId(Integer customerId) {
         this.customerId = customerId;
     }
 
