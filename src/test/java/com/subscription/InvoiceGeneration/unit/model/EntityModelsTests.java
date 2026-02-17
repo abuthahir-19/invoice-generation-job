@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Unit tests for Entity Models
  * Tests getters, setters, and basic business logic validation
  */
+
 class EntityModelsTests {
 
     // ==================== Customer Entity Tests ====================
