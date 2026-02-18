@@ -183,6 +183,9 @@ public class InvoiceGeneratorConfig {
             Map<String, ExecutionContext> partitions = new HashMap<>();
             long minId = 1;
             long maxId = 10000000;
+            if (gridSize <= 0) {
+                return partitions;
+            }
             long rangeSize = (maxId - minId) / gridSize;
             for (int i = 0; i < gridSize; i++) {
                 ExecutionContext context = new ExecutionContext();
