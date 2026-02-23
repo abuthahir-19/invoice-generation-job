@@ -7,7 +7,7 @@ COPY pom.xml .
 COPY src ./src
 
 # Package the JAR (skip tests for speed; remove -DskipTests if you want tests)
-RUN mvn clean package -DskipTests
+RUN mvn clean package
 
 # Stage 2: Lightweight runtime image
 FROM eclipse-temurin:21-jre-alpine

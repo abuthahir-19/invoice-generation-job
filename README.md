@@ -124,14 +124,14 @@ mvn clean install
 ```
 4. Run the application
 ```shell
-java -jar target/sales-data-batch-processor.jar /path/to/sales-data.csv path/to/service-account-key.json
+java -jar target/invoice-generation-job.jar /path/to/sales-data.csv path/to/service-account-key.json
 ```
 
 ## Docker Containerization
 
 1. Build the Docker image:
 ```shell
-docker build -t sales-data-batch-processor:latest .
+docker build -t invoice-generation-job:latest .
 ```
 
 2. Run docker image locally and verify:
@@ -157,12 +157,12 @@ gcloud auth configure-docker <region>-docker.pkg.dev
 
 5. Tag your local image for GCP:
 ```shell
-docker tag sales-data-batch-processor:latest <region>.pkg.dev/<gcp_project>/my-batch-repo/sales-data-batch-processor:latest
+docker tag invoice-generation-job:latest <region>-docker.pkg.dev/<gcp_project>/my-batch-repo/invoice-generation-job:latest
 ```
 
 6. Push the image:
 ```shell
-docker push <region>-docker.pkg.dev/<gcp_project>/my-batch-repo/sales-data-batch-processor:latest
+docker push <region>-docker.pkg.dev/<gcp_project>/my-batch-repo/invoice-generation-job:latest
 ```
 
 - Verify in GCP Console: Artifact Registry > Repositories > my-batch-repo > Images.
@@ -173,7 +173,7 @@ docker push <region>-docker.pkg.dev/<gcp_project>/my-batch-repo/sales-data-batch
 
 2. Create a Cloud Run Job
 ```shell
-gcloud run jobs create sales-data-batch-processor \
+gcloud run jobs create invoice-generation-job \
   --image <region>-docker.pkg.dev/<gcp_project>/my-batch-repo/sales-data-batch-processor:latest \
   --region <region> \
   --project <your_gcp_project> \
@@ -184,6 +184,6 @@ gcloud run jobs create sales-data-batch-processor \
 
 3. Run the Job:
 ```shell
-gcloud run jobs execute sales-data-batch-processor \
+gcloud run jobs execute invoice-generation-job \
   --region <region>
 ```
