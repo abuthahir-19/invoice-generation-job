@@ -14,8 +14,8 @@ pipeline {
         CLOUD_RUN_JOB     = 'invoice-generation-job'
 
         // === Control Flags (Change these for local testing) ===
-        SKIP_GCP_PUSH     = 'true'   // Set to 'true' during initial local testing
-        SKIP_CLOUD_RUN    = 'true'   // Set to 'true' during initial local testing
+        SKIP_GCP_PUSH     = 'false'   // Set to 'true' during initial local testing
+        SKIP_CLOUD_RUN    = 'false'   // Set to 'true' during initial local testing
     }
 
     tools {
