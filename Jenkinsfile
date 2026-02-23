@@ -42,9 +42,12 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // This mirrors your local command: docker build -t image_name:latest .
-                    docker.build("${APP_NAME}:${IMAGE_TAG}")
-                    echo "✅ Docker image built locally: ${APP_NAME}:${IMAGE_TAG}"
+                    try {
+                        sh "docker build -t ${APP_NAME}:${IMAGE_TAG} ."
+                        echo "✅ Docker image built locally: ${APP_NAME}:${IMAGE_TAG}"
+                    } catch (err) {
+                        error "❌ Docker build failed: ${err}"
+                    }
                 }
             }
         }
