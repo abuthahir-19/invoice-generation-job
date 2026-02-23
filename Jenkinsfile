@@ -82,7 +82,9 @@ pipeline {
                         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
                         gcloud run jobs update ${CLOUD_RUN_JOB} \
                           --image ${ARTIFACT_REGISTRY}/${GCP_PROJECT}/${REPO_NAME}/${APP_NAME}:${IMAGE_TAG} \
-                          --region ${REGION}
+                          --region ${REGION} \
+                          --project ${GCP_PROJECT} \
+                          --quiet
                     '''
                 }
                 echo "✅ Cloud Run Job updated with new image"
