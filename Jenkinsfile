@@ -43,7 +43,7 @@ pipeline {
             steps {
                 script {
                     // This mirrors your local command: docker build -t image_name:latest .
-                    sh "docker build -t ${APP_NAME}:${IMAGE_TAG} ."
+                    docker.build("${APP_NAME}:${IMAGE_TAG}")
                     echo "✅ Docker image built locally: ${APP_NAME}:${IMAGE_TAG}"
                 }
             }
