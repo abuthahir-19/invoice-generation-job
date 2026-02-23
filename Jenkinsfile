@@ -57,7 +57,7 @@ pipeline {
                 expression { SKIP_GCP_PUSH == 'false' }
             }
             steps {
-                withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                withCredentials([file(credentialsId: 'gcp-secret-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
                     sh '''
                         echo "🔐 Authenticating with GCP using service account..."
                         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
