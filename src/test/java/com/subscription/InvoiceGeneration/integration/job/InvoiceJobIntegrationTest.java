@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * DO NOT mock repositories or EntityManagerFactory - they need to be real for batch processing
  */
 
-@SpringBootTest(args = {"D:\\Java_data_projects\\InvoiceGeneration\\src\\test\\resources\\test-usage-comprehensive.csv", "test-key.json", "local"})
+@SpringBootTest(args = {"test-usage-comprehensive.csv", "test-key.json", "local"})
 @SpringBatchTest
 @ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.properties")
@@ -261,7 +261,7 @@ class InvoiceJobIntegrationTest {
     // Helper method to create test job parameters
     private JobParameters createTestJobParameters() {
         return new JobParametersBuilder()
-                .addString("usage", "D:\\Java_data_projects\\InvoiceGeneration\\src\\test\\resources\\test-usage-comprehensive.csv")
+                .addString("usage", "test-usage-comprehensive.csv")
                 .addString("service_acct_key", "D:\\Java_data_projects\\cloud-run-invoice-job-service-acct-json-key.json")
                 .addString("env", "local")
                 .addLong("runTime", System.currentTimeMillis())

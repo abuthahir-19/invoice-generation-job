@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Integration tests for InvoiceRepository
  * Tests database operations using H2 in-memory database
  */
-@SpringBootTest (args = {"D:\\Java_data_projects\\InvoiceGeneration\\src\\test\\resources\\test-usage-comprehensive.csv", "test-key.json", "local"})
+@SpringBootTest (args = {"test-usage-comprehensive.csv", "test-key.json", "local"})
 @ActiveProfiles("test")
 class InvoiceRepositoryIntegrationTest {
 

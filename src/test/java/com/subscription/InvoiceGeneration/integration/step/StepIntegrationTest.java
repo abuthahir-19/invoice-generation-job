@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests each step in isolation before testing full job
  */
 
-@SpringBootTest(args = {"D:\\Java_data_projects\\InvoiceGeneration\\src\\test\\resources\\test-usage-comprehensive.csv", "test-key.json", "local"})
+@SpringBootTest(args = {"test-usage-comprehensive.csv", "test-key.json", "local"})
 @SpringBatchTest
 @ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.properties")
@@ -100,7 +100,7 @@ class StepIntegrationTest {
     void testLoadUsageStepCompletion() {
         // Given
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("usage", "src/test/resources/test-usage.csv")
+                .addString("usage", "test-usage.csv")
                 .addString("service_acct_key", "")
                 .addString("env", "local")
                 .addLong("runTime", System.currentTimeMillis())
@@ -125,7 +125,7 @@ class StepIntegrationTest {
     void testLoadUsageStepPopulatesContext() {
         // Given
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("usage", "src/test/resources/test-usage.csv")
+                .addString("usage", "test-usage.csv")
                 .addString("service_acct_key", "")
                 .addString("env", "local")
                 .addLong("runTime", System.currentTimeMillis())
@@ -256,7 +256,7 @@ class StepIntegrationTest {
     void testPartitionedStepCreatesPartitions() throws Exception {
         // Given - Setup complete job context
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("usage", "src/test/resources/test-usage.csv")
+                .addString("usage", "test-usage.csv")
                 .addString("service_acct_key", "")
                 .addString("env", "local")
                 .addLong("runTime", System.currentTimeMillis())
@@ -280,7 +280,7 @@ class StepIntegrationTest {
     void testStepExecutionOrder() throws Exception {
         // Given
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("usage", "src/test/resources/test-usage.csv")
+                .addString("usage", "test-usage.csv")
                 .addString("service_acct_key", "")
                 .addString("env", "local")
                 .addLong("runTime", System.currentTimeMillis())
@@ -314,7 +314,7 @@ class StepIntegrationTest {
     void testStepMetrics() throws Exception {
         // Given
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("usage", "src/test/resources/test-usage.csv")
+                .addString("usage", "test-usage.csv")
                 .addString("service_acct_key", "")
                 .addString("env", "local")
                 .addLong("runTime", System.currentTimeMillis())
@@ -341,7 +341,7 @@ class StepIntegrationTest {
     void testInvoiceProcessReadWrite() throws Exception {
         // Given
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("usage", "src/test/resources/test-usage.csv")
+                .addString("usage", "test-usage.csv")
                 .addString("service_acct_key", "")
                 .addString("env", "local")
                 .addLong("runTime", System.currentTimeMillis())

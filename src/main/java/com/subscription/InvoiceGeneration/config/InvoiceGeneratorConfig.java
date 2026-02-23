@@ -36,7 +36,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
@@ -90,7 +89,7 @@ public class InvoiceGeneratorConfig {
                         .getService();
                 resource = new GoogleStorageResource (storage, usage);
             } else {
-                resource = new FileSystemResource (usage);
+                resource = new ClassPathResource (usage);
             }
 
             FlatFileItemReader<Usage> reader = new FlatFileItemReaderBuilder<Usage>()

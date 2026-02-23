@@ -22,13 +22,15 @@ import java.util.concurrent.ConcurrentMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for Tasklets
+ * Unit tests for Task lets
  * Tests loadUsageTasklet and loadPricingTasklet in isolation
  */
 class TaskletTests {
 
     private InvoiceGeneratorConfig config;
     private StepExecution stepExecution;
+
+    private static final Path TEST_CLASSES_DIR = Path.of("target/test-classes");
 
     @TempDir
     Path tempDir;
@@ -107,13 +109,9 @@ class TaskletTests {
     @Test
     @DisplayName("LoadUsageTasklet - Should handle empty file gracefully")
     void testLoadUsageEmptyFile() throws Exception {
-        // Given: Create an empty CSV file (with header only)
-        Path csvFile = tempDir.resolve("empty-usage.csv");
-        Files.writeString(csvFile, "customer_id,storage_used_gb,bandwidth_used_gb,api_calls,peak_usage_date,total_logins\n");
-
         // When: Execute tasklet
         Tasklet tasklet = config.loadUsageTasklet(
-                csvFile.toString(),
+                "empty-usage.csv",
                 "",
                 "local"
         );
@@ -138,25 +136,9 @@ class TaskletTests {
     @Test
     @DisplayName("LoadUsageTasklet - Should skip invalid lines")
     void testLoadUsageSkipsInvalidLines() throws Exception {
-        // Given: CSV with some invalid lines
-        Path csvFile = tempDir.resolve("invalid-usage.csv");
-        String csvContent = """
-            customer_id,storage_used_gb,bandwidth_used_gb,api_calls,peak_usage_date,total_logins
-            1,100.5,500.0,50000,2025-01-15,100
-            invalid,line,here,missing,fields
-            2,200.0,1000.0,100000,2025-01-20,200
-            another,bad,line
-            3,150.0,750.0,75000,2025-01-18,150
-            4,100.5,500.0,50000,2025-01-15,100
-            invalid,line,here,missing,fields
-            5,200.0,1000.0,100000,2025-01-20,200
-            another,bad,line
-            """;
-        Files.writeString(csvFile, csvContent);
-
         // When: Execute tasklet
         Tasklet tasklet = config.loadUsageTasklet(
-                csvFile.toString(),
+                "invalid-usage.csv",
                 "",
                 "local"
         );
@@ -185,13 +167,13 @@ class TaskletTests {
     @DisplayName("LoadUsageTasklet - Should use concurrent processing")
     void testLoadUsageConcurrentProcessing() throws Exception {
         // Given: Large CSV file to test concurrency
-        Path csvFile = createLargeUsageFile(1000); // 1000 records
+        String csvFile = createLargeUsageFile(1000); // 1000 records
 
         // When: Execute tasklet
         long startTime = System.currentTimeMillis();
 
         Tasklet tasklet = config.loadUsageTasklet(
-                csvFile.toString(),
+                csvFile,
                 "",
                 "local"
         );
@@ -316,20 +298,21 @@ class TaskletTests {
     // ==================== Helper Methods ====================
 
     private Path createTestUsageFile() throws IOException {
-        return Path.of ("D:\\Java_data_projects\\InvoiceGeneration\\src\\test\\resources\\test-usage.csv");
+        return Path.of ("test-usage.csv");
     }
 
-    private Path createLargeUsageFile(int recordCount) throws IOException {
-        Path csvFile = tempDir.resolve("large-usage.csv");
+    private String createLargeUsageFile(int recordCount) throws IOException {
+        Files.createDirectories(TEST_CLASSES_DIR);
+        Path csvFile = TEST_CLASSES_DIR.resolve("large-usage.csv");
+
         StringBuilder content = new StringBuilder();
         content.append("customer_id,storage_used_gb,bandwidth_used_gb,api_calls,peak_usage_date,total_logins\n");
-
         for (int i = 1; i <= recordCount; i++) {
             content.append(String.format("%d,%d.5,%d.0,%d,2025-01-15,%d\n",
                     i, i * 10, i * 50, i * 1000, i * 10));
         }
 
         Files.writeString(csvFile, content.toString());
-        return csvFile;
+        return "large-usage.csv"; // returned as classpath-relative name
     }
 }
