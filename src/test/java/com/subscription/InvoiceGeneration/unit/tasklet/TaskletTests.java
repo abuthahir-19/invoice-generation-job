@@ -32,9 +32,6 @@ class TaskletTests {
 
     private static final Path TEST_CLASSES_DIR = Path.of("target/test-classes");
 
-    @TempDir
-    Path tempDir;
-
     @BeforeEach
     void setUp() {
         config = new InvoiceGeneratorConfig();
