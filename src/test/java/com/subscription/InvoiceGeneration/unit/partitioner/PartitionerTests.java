@@ -85,7 +85,6 @@ class PartitionerTests {
     void testLastPartitionIncludesRemainder() {
         // Given
         int gridSize = 4;
-        long minId = 1;
         long maxId = 10000000;
 
         // When
