@@ -6,11 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -75,7 +72,7 @@ class InvoiceRepositoryIntegrationTest {
         invoiceRepository.save(createTestInvoice(3, "2025-01", "BASIC"));
 
         // When: Find all
-        List<Invoice> invoices = (List<Invoice>) invoiceRepository.findAll();
+        List<Invoice> invoices = invoiceRepository.findAll();
 
         // Then: All invoices should be returned
         assertEquals(3, invoices.size());
@@ -177,7 +174,7 @@ class InvoiceRepositoryIntegrationTest {
         invoiceRepository.save(feb);
 
         // Then: Both should exist independently
-        List<Invoice> invoices = (List<Invoice>) invoiceRepository.findAll();
+        List<Invoice> invoices = invoiceRepository.findAll();
         assertEquals(2, invoices.size());
 
         long janCount = invoices.stream()
