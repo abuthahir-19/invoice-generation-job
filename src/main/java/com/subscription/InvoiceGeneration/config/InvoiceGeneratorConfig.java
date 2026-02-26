@@ -133,7 +133,7 @@ public class InvoiceGeneratorConfig {
                             String[] fields = l.split (",");
                             if (fields.length != 6) {
                                 LOG.warn ("Skipping invalid line : {}", l);
-                                return null;
+                                continue;
                             }
 
                             Usage u = new Usage();
