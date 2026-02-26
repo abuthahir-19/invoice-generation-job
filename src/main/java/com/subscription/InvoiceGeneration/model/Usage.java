@@ -67,4 +67,16 @@ public class Usage {
     public void setTotalLogins(Integer totalLogins) {
         this.totalLogins = totalLogins;
     }
+
+    @Override
+    public String toString() {
+        return "Usage{" +
+                "customerId=" + customerId +
+                ", storageUsedGB=" + storageUsedGB +
+                ", bandwidthUsedGB=" + bandwidthUsedGB +
+                ", apiCalls=" + apiCalls +
+                ", peakUsageDate='" + peakUsageDate + '\'' +
+                ", totalLogins=" + totalLogins +
+                '}';
+    }
 }

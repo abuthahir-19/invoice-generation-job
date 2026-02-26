@@ -152,8 +152,12 @@ class TaskletTests {
         ConcurrentMap<Integer, ?> usageMap = (ConcurrentMap<Integer, ?>)
                 stepExecution.getJobExecution().getExecutionContext().get("usageMap");
 
+        for (Map.Entry<Integer, ?> e : usageMap.entrySet()) {
+            System.out.println (e.getKey() + " => " + e.getValue());
+        }
+
         assertNotNull(usageMap);
-        assertEquals(5, usageMap.size(), "Should load only 3 valid lines");
+        assertEquals(5, usageMap.size(), "Should load only 5 valid lines");
         assertTrue(usageMap.containsKey(1));
         assertTrue(usageMap.containsKey(2));
         assertTrue(usageMap.containsKey(3));
