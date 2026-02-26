@@ -116,6 +116,7 @@ public class InvoiceGeneratorConfig {
             reader.close();
 
             int numThreads = Runtime.getRuntime().availableProcessors();
+            LOG.info ("Total number of threads : {}", numThreads);
             ExecutorService executors = Executors.newFixedThreadPool (numThreads);
             ConcurrentMap<Integer, Usage> usageMap = new ConcurrentHashMap<>();
 
