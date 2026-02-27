@@ -7,8 +7,8 @@ pipeline {
         IMAGE_TAG         = "${env.BUILD_NUMBER}"   // Use build number for versioning (recommended)
 
         // === GCP Configuration (used in later stages) ===
-        GCP_PROJECT       = 'gcp-learning-acnt'
-        REGION            = 'us-central1'
+        GCP_PROJECT       = ${env.GCP_PROJECT}
+        REGION            = ${env.REGION}
         ARTIFACT_REGISTRY = 'us-central1-docker.pkg.dev'
         REPO_NAME         = 'my-batch-repo'
         CLOUD_RUN_JOB     = 'invoice-generation-job'
@@ -34,7 +34,20 @@ pipeline {
 
         stage('Build & Run Tests') {
             steps {
-                sh 'mvn clean package'
+            withCredentials ([
+                string (credentialsId: 'DB_NAME', variable: 'DB_NAME'),
+                string (credentialsId: 'CLOUD_INSTANCE_CONNECTION_NAME', variable: 'CLOUD_INSTANCE_CONNECTION_NAME'),
+                string (credentialsId: 'USERNAME', variable: 'USERNAME'),
+                string (credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD'),
+                string (credentialsId: 'JDBC_URL', variable: 'JDBC_URL')
+            ])
+                sh '''
+                # Inject env vars for Maven build (resolves placeholders in properties)
+                mvn clean package -DCLOUD_SQL_DB_NAME="$CLOUD_SQL_DB_NAME" \
+                                  -DCLOUD_SQL_INSTANCE="$CLOUD_SQL_INSTANCE" \
+                                  -DDB_USERNAME="$DB_USERNAME" \
+                                  -DDB_PASSWORD="$DB_PASSWORD"
+                '''
                 echo "✅ Maven build and tests completed successfully"
             }
         }
