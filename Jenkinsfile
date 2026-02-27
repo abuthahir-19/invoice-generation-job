@@ -34,13 +34,13 @@ pipeline {
 
         stage('Build & Run Tests') {
             steps {
-            withCredentials ([
-                string (credentialsId: 'DB_NAME', variable: 'DB_NAME'),
-                string (credentialsId: 'CLOUD_INSTANCE_CONNECTION_NAME', variable: 'CLOUD_INSTANCE_CONNECTION_NAME'),
-                string (credentialsId: 'USERNAME', variable: 'USERNAME'),
-                string (credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD'),
-                string (credentialsId: 'JDBC_URL', variable: 'JDBC_URL')
-            ])
+                withCredentials ([
+                    string (credentialsId: 'DB_NAME', variable: 'DB_NAME'),
+                    string (credentialsId: 'CLOUD_INSTANCE_CONNECTION_NAME', variable: 'CLOUD_INSTANCE_CONNECTION_NAME'),
+                    string (credentialsId: 'USERNAME', variable: 'USERNAME'),
+                    string (credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD'),
+                    string (credentialsId: 'JDBC_URL', variable: 'JDBC_URL')
+                ])
                 sh '''
                 # Inject env vars for Maven build (resolves placeholders in properties)
                 mvn clean package -DJDBC_URL="$JDBC_URL" \
