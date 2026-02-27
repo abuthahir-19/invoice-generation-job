@@ -7,7 +7,7 @@ pipeline {
         IMAGE_TAG         = "${env.BUILD_NUMBER}"   // Use build number for versioning (recommended)
 
         // === GCP Configuration (used in later stages) ===
-        GCP_PROJECT       = "${env.GCP_PROJECT}"
+        GCP_PROJECT       = "${env.GCP_PROJECT_ID}"
         REGION            = "${env.REGION}"
         ARTIFACT_REGISTRY = 'us-central1-docker.pkg.dev'
         REPO_NAME         = 'my-batch-repo'
