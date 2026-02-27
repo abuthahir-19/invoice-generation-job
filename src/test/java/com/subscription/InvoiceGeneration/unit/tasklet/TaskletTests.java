@@ -52,7 +52,7 @@ class TaskletTests {
                 "local"              // env
         );
 
-        ExecutionContext chunkContext = stepExecution.getExecutionContext();
+//        ExecutionContext chunkContext = stepExecution.getExecutionContext();
         RepeatStatus status = tasklet.execute(null,
                 new org.springframework.batch.core.scope.context.ChunkContext(
                         new org.springframework.batch.core.scope.context.StepContext(stepExecution)
