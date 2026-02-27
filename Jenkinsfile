@@ -7,8 +7,8 @@ pipeline {
         IMAGE_TAG         = "${env.BUILD_NUMBER}"   // Use build number for versioning (recommended)
 
         // === GCP Configuration (used in later stages) ===
-        GCP_PROJECT       = ${env.GCP_PROJECT}
-        REGION            = ${env.REGION}
+        GCP_PROJECT       = "${env.GCP_PROJECT}"
+        REGION            = "${env.REGION}"
         ARTIFACT_REGISTRY = 'us-central1-docker.pkg.dev'
         REPO_NAME         = 'my-batch-repo'
         CLOUD_RUN_JOB     = 'invoice-generation-job'
