@@ -43,9 +43,10 @@ pipeline {
             ])
                 sh '''
                 # Inject env vars for Maven build (resolves placeholders in properties)
-                mvn clean package -DCLOUD_SQL_DB_NAME="$CLOUD_SQL_DB_NAME" \
-                                  -DCLOUD_SQL_INSTANCE="$CLOUD_SQL_INSTANCE" \
-                                  -DDB_USERNAME="$DB_USERNAME" \
+                mvn clean package -DJDBC_URL="$JDBC_URL" \
+                                  -DDB_NAME="$DB_NAME" \
+                                  -DCLOUD_INSTANCE_CONNECTION_NAME="$CLOUD_INSTANCE_CONNECTION_NAME" \
+                                  -DUSERNAME="$USERNAME" \
                                   -DDB_PASSWORD="$DB_PASSWORD"
                 '''
                 echo "✅ Maven build and tests completed successfully"
