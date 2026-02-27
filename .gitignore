@@ -33,5 +33,5 @@ build/
 .vscode/
 
 # Ignore sensitive configuration files
-src/main/resources/application.properties
-src/main/resources/application-*.properties  # For profile-specific files like application-dev.properties
+#src/main/resources/application.properties
+#src/main/resources/application-*.properties  # For profile-specific files like application-dev.properties
