@@ -40,15 +40,16 @@ pipeline {
                     string (credentialsId: 'USERNAME', variable: 'USERNAME'),
                     string (credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD'),
                     string (credentialsId: 'JDBC_URL', variable: 'JDBC_URL')
-                ])
-                sh '''
-                # Inject env vars for Maven build (resolves placeholders in properties)
-                mvn clean package -DJDBC_URL="$JDBC_URL" \
-                                  -DDB_NAME="$DB_NAME" \
-                                  -DCLOUD_INSTANCE_CONNECTION_NAME="$CLOUD_INSTANCE_CONNECTION_NAME" \
-                                  -DUSERNAME="$USERNAME" \
-                                  -DDB_PASSWORD="$DB_PASSWORD"
-                '''
+                ]) {
+                    sh '''
+                    # Inject env vars for Maven build (resolves placeholders in properties)
+                    mvn clean package -DJDBC_URL="$JDBC_URL" \
+                                      -DDB_NAME="$DB_NAME" \
+                                      -DCLOUD_INSTANCE_CONNECTION_NAME="$CLOUD_INSTANCE_CONNECTION_NAME" \
+                                      -DUSERNAME="$USERNAME" \
+                                      -DDB_PASSWORD="$DB_PASSWORD"
+                    '''
+                }
                 echo "✅ Maven build and tests completed successfully"
             }
         }
