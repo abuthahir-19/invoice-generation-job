@@ -41,26 +41,15 @@ pipeline {
                     string(credentialsId: 'DB_PASSWORD',                    variable: 'DB_PASSWORD'),
                     string(credentialsId: 'JDBC_URL',                       variable: 'JDBC_URL')
                 ]) {
-                    script {
-                        echo "=== DEBUG: Properties being passed to Maven ==="
-                        echo "JDBC_URL                       = ${JDBC_URL}"
-                        echo "DB_NAME                        = ${DB_NAME}"
-                        echo "CLOUD_INSTANCE_CONNECTION_NAME = ${CLOUD_INSTANCE_CONNECTION_NAME}"
-                        echo "USERNAME                       = ${USERNAME}"
-                        echo "DB_PASSWORD                    = [MASKED]"
-
-                        echo "=== Starting Maven Build ==="
-
-                        sh '''
-                            mvn clean package \
-                                -DJDBC_URL="${JDBC_URL}" \
-                                -DDB_NAME="${DB_NAME}" \
-                                -DCLOUD_INSTANCE_CONNECTION_NAME="${CLOUD_INSTANCE_CONNECTION_NAME}" \
-                                -DUSERNAME="${USERNAME}" \
-                                -DDB_PASSWORD="${DB_PASSWORD}" \
-                                --no-transfer-progress
-                        '''
-                    }
+                    sh '''
+                        mvn clean package \
+                            -DJDBC_URL="${JDBC_URL}" \
+                            -DDB_NAME="${DB_NAME}" \
+                            -DCLOUD_INSTANCE_CONNECTION_NAME="${CLOUD_INSTANCE_CONNECTION_NAME}" \
+                            -DUSERNAME="${USERNAME}" \
+                            -DDB_PASSWORD="${DB_PASSWORD}" \
+                            --no-transfer-progress
+                    '''
                 }
                 echo "✅ Maven build and tests completed successfully"
             }
@@ -118,7 +107,6 @@ pipeline {
                           --image ${ARTIFACT_REGISTRY}/${GCP_PROJECT}/${REPO_NAME}/${APP_NAME}:${IMAGE_TAG} \
                           --region ${REGION} \
                           --project ${GCP_PROJECT} \
-                          --set-env-vars "CLOUD_INSTANCE_CONNECTION_NAME=${CLOUD_INSTANCE_CONNECTION_NAME},JDBC_URL=${JDBC_URL},DB_NAME=${DB_NAME},USERNAME=${USERNAME},DB_PASSWORD=${DB_PASSWORD}" \
                           --quiet
                     '''
                 }
