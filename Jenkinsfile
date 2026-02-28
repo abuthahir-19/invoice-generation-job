@@ -34,21 +34,33 @@ pipeline {
 
         stage('Build & Run Tests') {
             steps {
-                withCredentials ([
-                    string (credentialsId: 'DB_NAME', variable: 'DB_NAME'),
-                    string (credentialsId: 'CLOUD_INSTANCE_CONNECTION_NAME', variable: 'CLOUD_INSTANCE_CONNECTION_NAME'),
-                    string (credentialsId: 'USERNAME', variable: 'USERNAME'),
-                    string (credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD'),
-                    string (credentialsId: 'JDBC_URL', variable: 'JDBC_URL')
+                withCredentials([
+                    string(credentialsId: 'DB_NAME',                        variable: 'DB_NAME'),
+                    string(credentialsId: 'CLOUD_INSTANCE_CONNECTION_NAME', variable: 'CLOUD_INSTANCE_CONNECTION_NAME'),
+                    string(credentialsId: 'USERNAME',                       variable: 'USERNAME'),
+                    string(credentialsId: 'DB_PASSWORD',                    variable: 'DB_PASSWORD'),
+                    string(credentialsId: 'JDBC_URL',                       variable: 'JDBC_URL')
                 ]) {
-                    sh '''
-                    # Inject env vars for Maven build (resolves placeholders in properties)
-                    mvn clean package -DJDBC_URL="$JDBC_URL" \
-                                      -DDB_NAME="$DB_NAME" \
-                                      -DCLOUD_INSTANCE_CONNECTION_NAME="$CLOUD_INSTANCE_CONNECTION_NAME" \
-                                      -DUSERNAME="$USERNAME" \
-                                      -DDB_PASSWORD="$DB_PASSWORD"
-                    '''
+                    script {
+                        echo "=== DEBUG: Properties being passed to Maven ==="
+                        echo "JDBC_URL                       = ${JDBC_URL}"
+                        echo "DB_NAME                        = ${DB_NAME}"
+                        echo "CLOUD_INSTANCE_CONNECTION_NAME = ${CLOUD_INSTANCE_CONNECTION_NAME}"
+                        echo "USERNAME                       = ${USERNAME}"
+                        echo "DB_PASSWORD                    = [MASKED]"
+
+                        echo "=== Starting Maven Build ==="
+
+                        sh '''
+                            mvn clean package \
+                                -DJDBC_URL="${JDBC_URL}" \
+                                -DDB_NAME="${DB_NAME}" \
+                                -DCLOUD_INSTANCE_CONNECTION_NAME="${CLOUD_INSTANCE_CONNECTION_NAME}" \
+                                -DUSERNAME="${USERNAME}" \
+                                -DDB_PASSWORD="${DB_PASSWORD}" \
+                                --no-transfer-progress
+                        '''
+                    }
                 }
                 echo "✅ Maven build and tests completed successfully"
             }
