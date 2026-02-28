@@ -28,32 +28,27 @@ public class InvoiceGenerationApplication implements CommandLineRunner {
 	private static String env;
 
 	@Value("${spring.cloud.gcp.sql.instance-connection-name:NOT_SET}")
-	private String cloudSqlInstance;
+	private static String cloudSqlInstance;
 
 	@Value("${spring.cloud.gcp.sql.database-name:NOT_SET}")
-	private String databaseName;
+	private static String databaseName;
 
 	@Value("${spring.datasource.username:NOT_SET}")
-	private String dbUsername;
+	private static String dbUsername;
 
 	@Value("${spring.datasource.url:NOT_SET}")
-	private String jdbcUrl;
+	private static String jdbcUrl;
 
 	@Value("${spring.datasource.password:NOT_SET}")
-	private String dbPassword;
+	private static String dbPassword;
 
 	@Autowired (required = false)
-	private JobOperator jobOperator;
+	private static JobOperator jobOperator;
 
 	@Autowired (required = false)
-	private Job invoiceProcessingJob;
+	private static Job invoiceProcessingJob;
 
 	public static void main(String[] args) {
-		SpringApplication.run(InvoiceGenerationApplication.class, args);
-	}
-
-	@Override
-	public void run (String... args) throws Exception {
 		LOG.info("=== RUNTIME CONFIG DEBUG - START ===");
 		LOG.info("spring.cloud.gcp.sql.instance-connection-name = {}", cloudSqlInstance);
 		LOG.info("spring.cloud.gcp.sql.database-name             = {}", databaseName);
@@ -62,6 +57,11 @@ public class InvoiceGenerationApplication implements CommandLineRunner {
 		LOG.info("spring.datasource.password                         = {}", dbPassword);
 		LOG.info("=== RUNTIME CONFIG DEBUG - END ===");
 
+		SpringApplication.run(InvoiceGenerationApplication.class, args);
+	}
+
+	@Override
+	public void run (String... args) throws Exception {
 		Instant startTime = Instant.now();
 
 		if (args.length != 3) {
