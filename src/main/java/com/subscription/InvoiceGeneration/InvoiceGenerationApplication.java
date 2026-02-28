@@ -9,6 +9,7 @@ import org.springframework.batch.core.job.parameters.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.step.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,6 +27,21 @@ public class InvoiceGenerationApplication implements CommandLineRunner {
 	private static String service_acct_key;
 	private static String env;
 
+	@Value("${spring.cloud.gcp.sql.instance-connection-name:NOT_SET}")
+	private String cloudSqlInstance;
+
+	@Value("${spring.cloud.gcp.sql.database-name:NOT_SET}")
+	private String databaseName;
+
+	@Value("${spring.datasource.username:NOT_SET}")
+	private String dbUsername;
+
+	@Value("${spring.datasource.url:NOT_SET}")
+	private String jdbcUrl;
+
+	@Value("${spring.datasource.password:NOT_SET}")
+	private String dbPassword;
+
 	@Autowired (required = false)
 	private JobOperator jobOperator;
 
@@ -38,6 +54,14 @@ public class InvoiceGenerationApplication implements CommandLineRunner {
 
 	@Override
 	public void run (String... args) throws Exception {
+		LOG.info("=== RUNTIME CONFIG DEBUG - START ===");
+		LOG.info("spring.cloud.gcp.sql.instance-connection-name = {}", cloudSqlInstance);
+		LOG.info("spring.cloud.gcp.sql.database-name             = {}", databaseName);
+		LOG.info("spring.datasource.username                    = {}", dbUsername);
+		LOG.info("spring.datasource.url                         = {}", jdbcUrl);
+		LOG.info("spring.datasource.password                         = {}", dbPassword);
+		LOG.info("=== RUNTIME CONFIG DEBUG - END ===");
+
 		Instant startTime = Instant.now();
 
 		if (args.length != 3) {
