@@ -28,10 +28,10 @@ public class InvoiceGenerationApplication implements CommandLineRunner {
 	private static String env;
 
 	@Autowired (required = false)
-	private static JobOperator jobOperator;
+	private JobOperator jobOperator;
 
 	@Autowired (required = false)
-	private static Job invoiceProcessingJob;
+	private Job invoiceProcessingJob;
 
 	public static void main(String[] args) {
 		SpringApplication.run(InvoiceGenerationApplication.class, args);
