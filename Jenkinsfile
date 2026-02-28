@@ -104,13 +104,21 @@ pipeline {
                 expression { SKIP_CLOUD_RUN == 'false' }
             }
             steps {
-                withCredentials([file(credentialsId: 'gcp-secret-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                withCredentials([
+                    file(credentialsId: 'gcp-secret-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS'),
+                    string(credentialsId: 'DB_NAME',                        variable: 'DB_NAME'),
+                    string(credentialsId: 'CLOUD_INSTANCE_CONNECTION_NAME', variable: 'CLOUD_INSTANCE_CONNECTION_NAME'),
+                    string(credentialsId: 'USERNAME',                       variable: 'USERNAME'),
+                    string(credentialsId: 'DB_PASSWORD',                    variable: 'DB_PASSWORD'),
+                    string(credentialsId: 'JDBC_URL',                       variable: 'JDBC_URL')
+                ]) {
                     sh '''
                         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
                         gcloud run jobs update ${CLOUD_RUN_JOB} \
                           --image ${ARTIFACT_REGISTRY}/${GCP_PROJECT}/${REPO_NAME}/${APP_NAME}:${IMAGE_TAG} \
                           --region ${REGION} \
                           --project ${GCP_PROJECT} \
+                          --set-env-vars "CLOUD_INSTANCE_CONNECTION_NAME=${CLOUD_INSTANCE_CONNECTION_NAME},JDBC_URL=${JDBC_URL},DB_NAME=${DB_NAME},USERNAME=${USERNAME},DB_PASSWORD=${DB_PASSWORD}" \
                           --quiet
                     '''
                 }
