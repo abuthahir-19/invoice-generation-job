@@ -1,4 +1,4 @@
-# Spring Batch Invoice Generation Application
+# Spring Batch Automated Invoice Generation Application
 
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
