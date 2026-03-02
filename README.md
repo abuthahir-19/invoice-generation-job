@@ -797,15 +797,25 @@ mvn test jacoco:report
 ### Test Structure
 
 ```
-src/test/java/
-├── unit/
-│   ├── processor/InvoiceProcessorTest.java          (12 tests)
-│   ├── model/EntityModelTests.java                  (30 tests)
-│   ├── tasklet/TaskletTests.java                    (15 tests)
-│   └── partitioner/PartitionerTests.java            (20 tests)
-└── integration/
-    ├── job/InvoiceJobIntegrationTest.java           (10 tests)
-    └── repository/InvoiceRepositoryIntegrationTest.java (11 tests)
+src/test/java/com/subscription/InvoiceGeneration/
+│
+├── unit/                                               (77+ tests)
+│   ├── processor/
+│   │   └── InvoiceProcessorTest.java                  (12 tests)
+│   ├── model/
+│   │   └── EntityModelTests.java                      (30+ tests)
+│   ├── tasklet/
+│   │   └── TaskletTests.java                          (15+ tests)
+│   └── partitioner/
+│       └── PartitionerTests.java                      (20+ tests)
+│
+└── integration/                                        (31+ tests)
+    ├── job/
+    │   └── InvoiceJobIntegrationTest.java             (10 tests)
+    ├── step/
+    │   └── StepIntegrationTest.java                   (10+ tests)
+    └── repository/
+        └── InvoiceRepositoryIntegrationTest.java      (11 tests)
 ```
 
 ### Test Resources
@@ -896,20 +906,6 @@ Jenkins → Manage Jenkins → System Information
 # View build artifacts
 Jenkins → Job → Build #X → Artifacts
 ```
-
----
-
-## Contributing
-
-Contributions are welcome! Please follow these guidelines:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Write tests for new functionality
-4. Ensure all tests pass (`mvn test`)
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
 
 ---
 
