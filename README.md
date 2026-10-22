@@ -43,7 +43,7 @@ To make this a production-ready solution, the application incorporates cloud-nat
 
 This demonstrates end-to-end DevOps practices, from local development to automated cloud deployment via Jenkins pipeline, serving as a practical example for building production-ready batch processing applications in a modern cloud ecosystem.
 
-![Architecture Flow](./src/main/resources/Invoice-generation.png)
+![Architecture Flow](./src/main/resources/Spring_Batch_GCP_Invoice_Architecture.png)
 
 ---
 
@@ -816,6 +816,7 @@ src/test/java/com/subscription/InvoiceGeneration/
     │   └── StepIntegrationTest.java                   (10+ tests)
     └── repository/
         └── InvoiceRepositoryIntegrationTest.java      (11 tests)
+        
 ```
 
 ### Test Resources
